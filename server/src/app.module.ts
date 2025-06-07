@@ -2,6 +2,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entities/user.entity';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
    imports: [
@@ -18,7 +20,14 @@ import { User } from './auth/entities/user.entity';
       AuthModule,
    ],
 
-   providers: [],
+   providers: [
+
+      // Apply authentication globally
+      {
+         provide: APP_GUARD,
+         useClass: AuthGuard,
+      },
+   ],
    controllers: [],
 })
 export class AppModule {}
