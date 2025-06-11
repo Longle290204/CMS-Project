@@ -4,12 +4,13 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/jwt-auth.guard';
 import { GetUser } from './decorators/get-user.decorator';
 import { User } from './entities/user.entity';
+import { Public } from './decorators/public.decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
    constructor(private readonly authService: AuthService) {}
 
-   @HttpCode(HttpStatus.OK)
    @Post('sign-up')
    async signUp(@Body() authSignUpDto: AuthSignUpDto): Promise<string> {
       await this.authService.signUp(authSignUpDto);
