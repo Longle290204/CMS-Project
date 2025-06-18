@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Get, Patch } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch, Delete, Param, Query } from '@nestjs/common';
 import { ArticlesService } from './article.service';
 import { Article } from './entities/article.entity';
 import { CreateArticleDto } from './dto/createArticle.dto';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { User } from 'src/auth/entities/user.entity';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { UpdateArticleDto } from './dto/updateArticle.dto';
 
 @Controller('article')
 export class ArticlesController {
@@ -22,8 +23,21 @@ export class ArticlesController {
       return this.articleService.getAll();
    }
 
-   // @Patch()
-   // updateArticle(): Promise<void> {
-   //    return this.postService.updateArticle();
+   @Delete(':id')
+   @Public()
+   deleteArticle(@Param('id') id: string): Promise<string> {
+      return this.articleService.deleteArticle(id);
+   }
+
+   // @Patch('update/:id')
+   // @Public()
+   // update(@Param('id') id: string, @Body('status') status: ArticleStatus) {
+   //    return this.articleService.updateStatus(id, status);
    // }
+
+   @Public()
+   @Patch('update/:id')
+   async update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto): Promise<void> {
+      return this.articleService.update(id, updateArticleDto);
+   }
 }

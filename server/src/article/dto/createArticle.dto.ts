@@ -21,5 +21,5 @@ export class CreateArticleDto {
    @IsArray()
    @ValidateNested({ each: true })
    @Type(() => CreateArticleLanguageDto)
-   language: CreateArticleLanguageDto[];
+   languages: CreateArticleLanguageDto[];
 }

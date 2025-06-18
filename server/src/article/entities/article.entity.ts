@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'ty
 import { User } from 'src/auth/entities/user.entity';
 import { ArticleLanguage } from 'src/Article_Languages/entities/article_languages.entity';
 import { Category } from 'src/categories/entities/category.entity';
-import { ArticleTag } from 'src/article_tags/entities/article_tag.entity';
+import { UserClick } from 'src/user_click/entities/user_click.entity';
 
 export enum ArticleStatus {
    PUBLISHED = 'PUBLISHED',
@@ -10,7 +10,7 @@ export enum ArticleStatus {
    DELETED = 'DELETED',
 }
 
-@Entity('articles')
+@Entity('article')
 export class Article {
    @PrimaryGeneratedColumn('uuid')
    id: string;
@@ -30,13 +30,18 @@ export class Article {
    @Column({ default: 0 })
    priority_top: number;
 
-   @OneToMany(() => ArticleLanguage, (articleLanguage) => articleLanguage.article, { cascade: true })
+   @Column({ default: 0 })
+   view: number;
+
+   @OneToMany(() => ArticleLanguage, (articleLanguage) => articleLanguage.article, {
+      eager: true,
+      cascade: true,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+   })
    languages: ArticleLanguage[];
 
-   @OneToMany(() => ArticleTag, (articleTag) => articleTag.article)
-   articleTag: ArticleTag[];
-
-   @ManyToOne(() => User, (user) => user.articles, { cascade: true, onDelete: 'CASCADE' })
+   @ManyToOne(() => User, (user) => user.articles)
    created_by: User;
 
    @Column({ type: 'enum', enum: ArticleStatus, default: ArticleStatus.DRAFT })
@@ -50,4 +55,11 @@ export class Article {
 
    @Column({ type: 'timestamp', default: null })
    deleted_at: Date;
+
+   @OneToMany(() => UserClick, (userCLick) => userCLick.article, {
+      cascade: true,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+   })
+   userClick: UserClick[];
 }
