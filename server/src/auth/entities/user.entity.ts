@@ -1,10 +1,11 @@
-import { Post } from 'src/posts/entities/post.entity';
+import { Article } from 'src/article/entities/article.entity';
+import { UserClick } from 'src/user_click/entities/user_click.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
-   @PrimaryGeneratedColumn()
-   id: number;
+   @PrimaryGeneratedColumn('uuid')
+   id: string;
 
    @Column()
    username: string;
@@ -24,6 +25,14 @@ export class User {
    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
    updatedAt: Date;
 
-   @OneToMany(() => Post, (post) => post.created_by)
-   posts: Post[];
+   @OneToMany(() => Article, (article) => article.created_by, { eager: true, cascade: true })
+   articles: Article[];
+
+   @OneToMany(() => UserClick, (userClick) => userClick.user, {
+      cascade: true,
+      eager: true,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+   })
+   userClick: UserClick[];
 }
