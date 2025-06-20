@@ -29,12 +29,6 @@ export class ArticlesController {
       return this.articleService.deleteArticle(id);
    }
 
-   // @Patch('update/:id')
-   // @Public()
-   // update(@Param('id') id: string, @Body('status') status: ArticleStatus) {
-   //    return this.articleService.updateStatus(id, status);
-   // }
-
    @Public()
    @Patch('update/:id')
    async update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto): Promise<void> {

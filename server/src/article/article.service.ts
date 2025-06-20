@@ -64,10 +64,10 @@ export class ArticlesService {
          throw new NotFoundException(`Article with ID ${id} not found`);
       }
 
-      article.thumbnail = thumbnail;
-      article.description = description;
-      article.is_hot = is_hot;
-      article.priority_top = priority_top;
+      article.thumbnail = thumbnail ?? article.thumbnail;
+      article.description = description ?? article.description;
+      article.is_hot = is_hot ?? article.is_hot;
+      article.priority_top = priority_top ?? article.priority_top;
       article.status = status ?? article.status;
 
       article.languages = [];
