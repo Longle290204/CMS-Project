@@ -6,24 +6,26 @@ import { GetUser } from './decorators/get-user.decorator';
 import { User } from './entities/user.entity';
 import { Public } from './decorators/public.decorator';
 
-@Public()
+// @Public()
 @Controller('auth')
 export class AuthController {
    constructor(private readonly authService: AuthService) {}
 
    @Post('sign-up')
+   @Public()
    async signUp(@Body() authSignUpDto: AuthSignUpDto): Promise<string> {
       await this.authService.signUp(authSignUpDto);
       return 'Sign up succesfully';
    }
 
    @Post('sign-in')
+   @Public()
    signIn(@Body() authSignInDto: AuthSignInDto): Promise<{ accessToken: string; refreshToken: string }> {
       return this.authService.signIn(authSignInDto);
    }
 
-   @UseGuards(AuthGuard)
    @Get('profile')
+   @Public()
    getProfile(@GetUser() user: User) {
       return user;
    }
