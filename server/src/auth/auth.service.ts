@@ -5,6 +5,8 @@ import { AuthSignUpDto, AuthSignInDto } from './dto/auth-credentials.dto';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
+import { Role } from './role/role.enum';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -62,7 +64,7 @@ export class AuthService {
       const user = await this.userRepository.findOne({ where: { username } });
 
       if (user && (await bcrypt.compare(password, user.password))) {
-         const payload = { username: username, id: user.id };
+         const payload = { username: username, id: user.id, roles: Role.User };
          const accessToken: string = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
          const refreshToken: string = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
 
@@ -88,5 +90,38 @@ export class AuthService {
       } else {
          throw new UnauthorizedException('Please check credentials');
       }
+   }
+
+   async logOut(id: string) {
+      // <========== Find user ===========>
+      // C1: Raw SQL
+      // const userExist = await this.userRepository.query(
+      //    `SELECT "user".*
+      //     FROM "user"
+      //     WHERE "id" = '${id}'`,
+      // );
+      // C2: TypeORM
+      const userExist = await this.userRepository.findOne({ where: { id } });
+      if (!userExist) {
+         throw new NotFoundException(`Not found user`);
+      }
+
+      // <============= Update refresh token ===============>
+      // C1: TypeORM
+      userExist.refreshToken = ' ';
+      await this.userRepository.save(userExist);
+
+      // C2: Raw SQL
+      // this.userRepository.query(`UPDATE "user"
+      //                            SET "refreshToken" = ' '
+      //                            WHERE "id" = $1`, [id]);
+
+      // C3: Query builder
+      // this.userRepository
+      //    .createQueryBuilder()
+      //    .update(userExist)
+      //    .set({ refreshToken: ' ' })
+      //    .where('id = :id', { id })
+      //    .execute();
    }
 }
