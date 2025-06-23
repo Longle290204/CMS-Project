@@ -1,4 +1,10 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+   BadRequestException,
+   ConflictException,
+   Injectable,
+   NotFoundException,
+   UnauthorizedException,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { AuthSignUpDto, AuthSignInDto } from './dto/auth-credentials.dto';
@@ -123,5 +129,38 @@ export class AuthService {
       //    .set({ refreshToken: ' ' })
       //    .where('id = :id', { id })
       //    .execute();
+   }
+
+   async changePassword(id: string, updateUserDto: UpdateUserDto) {
+      const { oldPassword, newPassword, confirmNewPassword } = updateUserDto;
+
+      const userExist = await this.userRepository.findOneBy({ id });
+      if (!userExist) {
+         throw new NotFoundException(`Not found user`);
+      }
+
+      if (newPassword != confirmNewPassword) {
+         throw new BadRequestException(`Confirm password is wrong`);
+      }
+
+      if (!(await bcrypt.compare(oldPassword, userExist.password))) {
+         throw new BadRequestException(`Old password is wrong`);
+      }
+      userExist.password = ' ';
+      const salt = await bcrypt.genSalt();
+      const hashNewPassWord = await bcrypt.hash(newPassword, salt);
+      userExist.password = hashNewPassWord;
+      return await this.userRepository.save(userExist);
+
+      // C2: Raw SQL
+      // await this.userRepository.query(`UPDATE "user"
+      //                                  SET "password" = ${hashNewPassWord}`)
+
+      // C3: Query builder
+      // this.userRepository
+      //    .createQueryBuilder()
+      //    .update(userExist)
+      //    .set({ password: hashNewPassWord })
+      //    .where('id = :id', { id });
    }
 }

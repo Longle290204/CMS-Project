@@ -30,6 +30,12 @@ export class AuthController {
       return this.authService.logOut(id);
    }
 
+   @Patch('/changePassword')
+   changePassword(@GetUser() user: User, @Body() updateUserDto: UpdateUserDto) {
+      const id = user.id;
+      return this.authService.changePassword(id, updateUserDto);
+   }
+
    @Get('profile')
    // @Public()
    getProfile(@GetUser() user: User) {
