@@ -8,6 +8,7 @@ import { ArticleModule } from './article/article.module';
 import { CategoryModule } from './categories/category.module';
 import { TagModule } from './tags/tag.module';
 import { UserClickModule } from './user_click/user_click.module';
+import { RolesGuard } from './auth/guards/roles.guard';
 
 @Module({
    imports: [
@@ -35,6 +36,10 @@ import { UserClickModule } from './user_click/user_click.module';
       {
          provide: APP_GUARD,
          useClass: AuthGuard,
+      },
+      {
+         provide: APP_GUARD,
+         useClass: RolesGuard,
       },
    ],
    controllers: [],
