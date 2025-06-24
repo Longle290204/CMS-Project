@@ -17,7 +17,11 @@ export class ArticleLanguage {
    @Column({ type: 'text', nullable: true })
    content: string;
 
-   @OneToMany(() => Tag, (tag) => tag.articleLanguage, { eager: true, cascade: true, onDelete: 'CASCADE' })
+   @OneToMany(() => Tag, (tag) => tag.articleLanguage, {
+      eager: true,
+      cascade: true,
+      onUpdate: 'CASCADE',
+   })
    tags: Tag[];
 
    @ManyToOne(() => Article, (article) => article.languages, { onDelete: 'CASCADE' })

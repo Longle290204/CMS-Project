@@ -9,9 +9,9 @@ export class Tag {
    @Column({ type: 'varchar' })
    name: string;
 
-   @Column({type: 'varchar', default: null})
+   @Column({ type: 'varchar', default: null })
    link: string;
 
-   @ManyToOne(() => ArticleLanguage, articleLanguage => articleLanguage.tags)
+   @ManyToOne(() => ArticleLanguage, (articleLanguage) => articleLanguage.tags, { onDelete: 'CASCADE' })
    articleLanguage: ArticleLanguage;
 }

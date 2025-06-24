@@ -36,7 +36,6 @@ export class Article {
    @OneToMany(() => ArticleLanguage, (articleLanguage) => articleLanguage.article, {
       eager: true,
       cascade: true,
-      onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
    })
    languages: ArticleLanguage[];
