@@ -63,7 +63,23 @@ export class ArticlesController {
 
    @Public()
    @Patch('update/:id')
-   async update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto): Promise<void> {
-      return this.articleService.update(id, updateArticleDto);
+   @UseInterceptors(FileInterceptor('thumbnail'))
+   async update(
+      @UploadedFile() thumbnail: Express.Multer.File,
+      @Param('id') id: string,
+      @Body('updateArticleDto') updateArticleDtoRaw: string,
+   ): Promise<void> {
+      // Transform the plain object into an instance of dto
+      const dto = plainToInstance(UpdateArticleDto, JSON.parse(updateArticleDtoRaw));
+      // Check constrain class-validate
+      const error = await validate(dto);
+      if (error.length > 0) {
+         throw new BadRequestException(error);
+      }
+      // Assignment thumbnail into dto
+      if (thumbnail) {
+         dto.thumbnail = `/uploads/${thumbnail.filename}`;
+      }
+      return this.articleService.update(id, dto);
    }
 }

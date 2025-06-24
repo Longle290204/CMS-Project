@@ -16,10 +16,7 @@ export class ArticlesService {
       @InjectRepository(ArticleLanguage) private readonly articleLangRepo: Repository<ArticleLanguage>,
    ) {}
 
-   async createArticle(
-      createArticleDto: CreateArticleDto,
-      user: User,
-   ): Promise<Article> {
+   async createArticle(createArticleDto: CreateArticleDto, user: User): Promise<Article> {
       const { categoryId, status, priority_top, languages } = createArticleDto;
       // Check category
       const category = await this.categoryRepo.findOne({ where: { id: categoryId } });
