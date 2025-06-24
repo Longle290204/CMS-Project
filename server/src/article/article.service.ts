@@ -16,25 +16,28 @@ export class ArticlesService {
       @InjectRepository(ArticleLanguage) private readonly articleLangRepo: Repository<ArticleLanguage>,
    ) {}
 
-   async createArticle(createArticleDto: CreateArticleDto, user: User): Promise<Article> {
-      const { categoryId, thumbnail, status, priority_top, languages } = createArticleDto;
-
+   async createArticle(
+      createArticleDto: CreateArticleDto,
+      user: User,
+   ): Promise<Article> {
+      const { categoryId, status, priority_top, languages } = createArticleDto;
+      // Check category
       const category = await this.categoryRepo.findOne({ where: { id: categoryId } });
       if (!category) {
          throw new NotFoundException(`Category with ID ${categoryId} not found`);
       }
-
+      // Must have at least one 'vi' language
       const languageArray = languages;
       const hasVieLang = languageArray.find((language) => language.language === 'vi');
       if (!hasVieLang) {
          throw new BadRequestException(`Vietnamese is required`);
       }
-
+      // Create and save into database
       const newArticle = this.articleRepo.create({
          category,
-         thumbnail,
          status,
          priority_top,
+         thumbnail: createArticleDto.thumbnail,
          languages: languages,
          created_by: user,
       });

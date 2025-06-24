@@ -5,9 +5,22 @@ import { ArticlesService } from './article.service';
 import { ArticlesController } from './article.controller';
 import { Category } from 'src/categories/entities/category.entity';
 import { ArticleLanguage } from 'src/Article_Languages/entities/article_languages.entity';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Module({
-   imports: [TypeOrmModule.forFeature([Article, Category, ArticleLanguage])],
+   imports: [
+      TypeOrmModule.forFeature([Article, Category, ArticleLanguage]),
+      MulterModule.register({
+         storage: diskStorage({
+            destination: './uploads',
+            filename: (req, file, cb) => {
+               const filename = `${Date.now()}-${file.originalname}`;
+               cb(null, filename);
+            },
+         }),
+      }),
+   ],
    providers: [ArticlesService],
    controllers: [ArticlesController],
 })
