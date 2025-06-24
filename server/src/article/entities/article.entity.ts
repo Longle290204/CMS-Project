@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from 'src/auth/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { ArticleLanguage } from 'src/Article_Languages/entities/article_languages.entity';
 import { Category } from 'src/categories/entities/category.entity';
 import { UserClick } from 'src/user_click/entities/user_click.entity';

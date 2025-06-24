@@ -4,7 +4,7 @@ import { Article } from './entities/article.entity';
 import { Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/createArticle.dto';
 import { Category } from 'src/categories/entities/category.entity';
-import { User } from 'src/auth/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { UpdateArticleDto } from './dto/updateArticle.dto';
 import { ArticleLanguage } from 'src/Article_Languages/entities/article_languages.entity';
 

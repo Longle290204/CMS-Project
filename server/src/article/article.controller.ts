@@ -14,7 +14,7 @@ import { ArticlesService } from './article.service';
 import { Article } from './entities/article.entity';
 import { CreateArticleDto } from './dto/createArticle.dto';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
-import { User } from 'src/auth/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { UpdateArticleDto } from './dto/updateArticle.dto';
 import { Roles } from 'src/auth/role/roles.decorator';

@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Get } from '@nestjs/common';
 import { UserClickService } from './user_click.service';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
-import { User } from 'src/auth/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { UserClick } from './entities/user_click.entity';
 import { Public } from 'src/auth/decorators/public.decorator';
 

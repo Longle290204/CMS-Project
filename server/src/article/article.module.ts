@@ -7,10 +7,11 @@ import { Category } from 'src/categories/entities/category.entity';
 import { ArticleLanguage } from 'src/Article_Languages/entities/article_languages.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { User } from 'src/user/entities/user.entity';
 
 @Module({
    imports: [
-      TypeOrmModule.forFeature([Article, Category, ArticleLanguage]),
+      TypeOrmModule.forFeature([Article, Category, ArticleLanguage, User]),
       MulterModule.register({
          storage: diskStorage({
             destination: './uploads',
