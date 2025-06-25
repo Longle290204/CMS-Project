@@ -65,6 +65,10 @@ export class AuthService {
       const { username, password } = authSignInDto;
 
       const user = await this.userRepository.findOne({ where: { username } });
+      // Disable Account
+      if (!user?.isActive) {
+         throw new UnauthorizedException(`Account has been disable`)
+      }
 
       if (user && (await bcrypt.compare(password, user.password))) {
          const payload = { username: username, id: user.id, roles: Role.User };

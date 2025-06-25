@@ -37,6 +37,9 @@ export class User {
    })
    userClick: UserClick[];
 
+   @Column({ default: true })
+   isActive: boolean;
+
    @Column({ type: 'enum', enum: UserRole, default: UserRole.User })
    role: UserRole;
 }

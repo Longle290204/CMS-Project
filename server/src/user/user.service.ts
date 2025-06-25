@@ -63,19 +63,26 @@ export class UserService {
       return this.userRepo.save(newUser);
    }
 
-   updateUser(id: string, dto: UpdateUserDto) {
-      const { username, email } = dto;
+   async updateUser(id: string, dto: UpdateUserDto): Promise<any> {
+      const { username, email, isActive } = dto;
+      const user = await this.userRepo.findOne({ where: { id } });
+      if (!user) {
+         throw new NotFoundException(`Not found user`);
+      }
+
       // C1: QueryBuilder
       // this.userRepo
       //    .createQueryBuilder()
       //    .update(User)
       //    .set({ username: username, email: email })
       //    .where('id = :id', { id });
-      this.userRepo.query(`
-         UPDATE TABLE "user"
-         SET "username" = ${username}, "email" = ${email}
-         WHERE "id" = ${id}
-         `);
+      // C2: Raw SQL
+      await this.userRepo.query(
+         `UPDATE "user"
+          SET "username" = $1, "email" = $2, "isActive" = $3
+          WHERE "id" = $4`,
+         [username ? username : user.username, email ? email : user.email, isActive ? isActive : user.isActive, id],
+      );
    }
 
    async deleteUser(id: string): Promise<string> {

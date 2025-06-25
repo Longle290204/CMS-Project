@@ -31,7 +31,7 @@ export class UserController {
 
    // Admin update user
    @Patch(':id')
-   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<any> {
       return this.userService.updateUser(id, updateUserDto);
    }
 
